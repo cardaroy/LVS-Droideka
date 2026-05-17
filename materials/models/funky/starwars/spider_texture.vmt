@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/funky/starwars/spider_texture"
+	"$surfaceprop" "metal"
+	"$model" 1
+}

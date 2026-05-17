@@ -1,0 +1,10 @@
+{
+	"title"		: "[LVS] - Star Wars Droideka",
+	"type"		: "vehicle",
+	"tags"		: [ "vehicle", "npc" ],
+	"ignore"	: [
+		"*.psd",
+		"*.vcproj",
+		"*.svn*"
+	]
+}

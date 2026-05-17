@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/stan/starwars/droidekas/hose"
+	$bumpmap "models/stan/starwars/droidekas/hose_n"
+}
