@@ -11,7 +11,7 @@ function ENT:ContraptionThink()
 	self:CheckActive()
 	self:CheckMotion( OnMoveableFloor )
 	self:Animate()
-	self:AimTurret()
+	--self:AimTurret()
 end
 
 function ENT:CheckUpRight()
@@ -127,6 +127,7 @@ function ENT:Animate()
 end
 
 function ENT:AnimState_Rolling( rate )
+	self._CanShoot = false
 	self._deployDelay = false
 	if not self._rollDelay or CurTime() >= self._rollDelay then
 		self:PlayAnimation( "roll", rate )
@@ -138,9 +139,13 @@ function ENT:AnimState_Deployed()
 	if not self._deployDelay then
 		self:PlayAnimation( "deploy", 1 )
 		self._deployDelay = CurTime() + 2
-	elseif self._AIFireInput and CurTime() >= ( self._shootDelay or 0 ) then
+		timer.Simple(1, function()
+			self._CanShoot = true
+		end )
+		
+	elseif (self._AIFireInput or CurTime() < ( self._FiringAnimTimer or 0 )) and CurTime() >= ( self._shootDelay or 0 ) then
 		self:PlayAnimation( "shoot", 2 )
-		self._shootDelay = CurTime() + 0.42
+		self._shootDelay = CurTime() + 0.38
 	end
 end
 
@@ -162,7 +167,7 @@ function ENT:CheckGround()
 			mins = Vector( -self.HoverHullRadius, -self.HoverHullRadius, -4 ),
 			maxs = Vector( self.HoverHullRadius, self.HoverHullRadius, 4 ),
 			filter = function( entity ) 
-				if self:GetCrosshairFilterLookup()[ entity:EntIndex() ] or entity:IsPlayer() or entity:IsNPC() or entity:IsVehicle() or self.HoverCollisionFilter[ entity:GetCollisionGroup() ] then
+				if self:GetCrosshairFilterLookup()[ entity:EntIndex() ] or entity:IsPlayer() or entity:GetClass() == "droideka_shield" or entity:IsNPC() or entity:IsVehicle() or self.HoverCollisionFilter[ entity:GetCollisionGroup() ] then
 					return false
 				end
 
@@ -180,6 +185,7 @@ function ENT:CheckGround()
 
 		NumHits = NumHits + 1
 	end
+	
 
 	self._NumGround = NumHits
 	self._HitGround = NumHits == 1
@@ -195,11 +201,4 @@ function ENT:OnIsCarried( name, old, new)
 	else
 		self:SetTargetSpeed( 200 )
 	end
-end
-
-function ENT:AimTurret()
-    --if CLIENT then
-    --    self:CalcHeadAim()
-	--	print("Called calcheadaim")
-    --end
 end

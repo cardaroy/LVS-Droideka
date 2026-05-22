@@ -58,7 +58,7 @@ function ENT:StartCommand( ply, cmd )
 
 
 end
-
+--[[
 function ENT:GetHoverHeight( ent, phys )
 	local Len = self.HoverHeight
 	local trace = self:ClimbTrace()
@@ -69,18 +69,18 @@ function ENT:GetHoverHeight( ent, phys )
 
 	return Len
 end
-
+--]]
 function ENT:GetAlignment( ent, phys )
 	-- Keep hover alignment stable; artificial wobble torque can cause spinouts on slope transitions.
 	return ent:GetForward(), ent:GetRight()
 end
-
+--[[
 function ENT:ClimbTrace()
 	local tracedata = {
 		start = self:LocalToWorld( self:OBBCenter() ),
 		endpos = self:LocalToWorld( self:OBBCenter() + Vector(0,0,0) ),
 		filter = function( ent )
-			if self:GetCrosshairFilterLookup()[ ent:EntIndex() ] or ent:IsPlayer() or ent:IsNPC() or ent:IsVehicle() or self.HoverCollisionFilter[ ent:GetCollisionGroup() ] then
+			if self:GetCrosshairFilterLookup()[ ent:EntIndex() ] or ent:IsPlayer() or ent:IsNPC() or ent:IsVehicle() or ent:GetClass() == "droideka_shield" or self.HoverCollisionFilter[ ent:GetCollisionGroup() ] then
 				return false
 			end
 
@@ -94,7 +94,7 @@ function ENT:ClimbTrace()
 
 	return trace
 end
-
+--]]
 
 function ENT:CalcMove( speed )
 	self:SetMove( self:GetMove() + speed * 0.027 )

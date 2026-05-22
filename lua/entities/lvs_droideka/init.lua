@@ -2,6 +2,7 @@ AddCSLuaFile( "shared.lua" )
 AddCSLuaFile( "cl_init.lua" )
 -- AddCSLuaFile( "cl_ikfunctions.lua" )
 AddCSLuaFile( "cl_camera.lua" )
+AddCSLuaFile( "sh_weapons.lua" )
 -- AddCSLuaFile( "cl_legs.lua" )
 AddCSLuaFile( "cl_prediction.lua" )
 --AddCSLuaFile( "sh_turret.lua" )
@@ -94,6 +95,8 @@ function ENT:OnSpawn( PObj )
 	self._LastCapturedCollision = CurTime() - 2
 	self._HoldPosition = false
 	self._shootDelay = 0
+
+	--self._ShieldActive = false
 	
 end
 

@@ -3,7 +3,7 @@ ENT.Base = "lvs_walker_atte_hoverscript"
 
 ENT.PrintName = "Droideka"
 ENT.Author = "Cards"
-ENT.Information = "Destroyers are quick"
+ENT.Information = "Destroyers are quick rolling droids with powerful twin blasters and a deflector shield"
 ENT.Category = "[LVS] - Star Wars"
 
 ENT.Spawnable		= true

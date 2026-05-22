@@ -3,6 +3,7 @@ include("shared.lua")
 include( "cl_camera.lua" )
 -- include( "cl_legs.lua" )
 include( "cl_prediction.lua" )
+include( "sh_weapons.lua" )
 --include("sh_turret.lua")
 --include("sh_gunner.lua")
 
