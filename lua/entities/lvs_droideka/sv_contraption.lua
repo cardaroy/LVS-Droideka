@@ -127,6 +127,7 @@ function ENT:Animate()
 end
 
 function ENT:AnimState_Rolling( rate )
+	self:ToggleShield( ent, shield, false)
 	self._CanShoot = false
 	self._deployDelay = false
 	if not self._rollDelay or CurTime() >= self._rollDelay then

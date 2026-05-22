@@ -22,6 +22,23 @@ function ENT:Initialize()
     end
     self:SetMaxHealth(500)
     self:SetHealth(500)
-    
+
 end
 
+function ENT:OnTakeDamage( dmginfo )
+    self:SetHealth( self:Health() - dmginfo:GetDamage() )
+    if self:Health() <= 0 then
+        local effectdata = EffectData()
+        effectdata:SetOrigin( self:GetPos() )
+        util.Effect( "lvs_explosion_nodebris", effectdata )
+        self:Remove()
+    end
+end
+
+function ENT:OnRemove()
+    local owner = self:GetOwner()
+    if IsValid( owner ) then
+        owner._ShieldActive = false
+        owner._Shield = nil
+    end
+end

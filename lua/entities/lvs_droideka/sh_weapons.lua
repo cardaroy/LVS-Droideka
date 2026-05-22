@@ -53,7 +53,7 @@ function ENT:InitWeapons()
 		print("Triggering Shield!")
 		if CurTime() > self._ShieldCoolDown and self._ShieldActive == false then
         	return self:ToggleShield( ent, shield, true)
-		else
+		elseif CurTime() > self._ShieldCoolDown and self._ShieldActive == true then
 			return self:ToggleShield( ent, shield, false)
 		end
     end
@@ -124,41 +124,17 @@ function ENT:Shoot(ent)
 
 end
 
-function ENT:ToggleShield( ent , shield,  on)
-	print("Turning on Shield!")
-	local shield = ents.Create("droideka_shield")
-	self._ShieldCoolDown = CurTime() + 2
-	self._ShieldActive = true
-	local Centre_Bone = self:LookupBone("bip_spine1a")
-	print("Activating Shield!")
-	shield:SetPos(ent:GetPos())
-
-	shield:SetAngles(Angle(0,0,0))
-	shield.mmRHAe = 100
-	shield:SetOwner(self)
-	shield:SetParent(self)
-	shield:Spawn()
-	shield:SetModelScale(0,0)
-	shield:SetModelScale(1.2, 0.1)
-	shield:Activate()
-	if Centre_Bone then
-		shield:FollowBone( self, Centre_Bone)
-	end
-
-	self._Shield = shield
-	self._EntityLookUp = nil
-	--[[
+function ENT:ToggleShield( ent, shield, on )
 	if on then
+		local shield = ents.Create("droideka_shield")
 		self._ShieldCoolDown = CurTime() + 2
 		self._ShieldActive = true
 		local Centre_Bone = self:LookupBone("bip_spine1a")
-		print("Activating Shield!")
 		shield:SetPos(ent:GetPos())
-
 		shield:SetAngles(Angle(0,0,0))
 		shield.mmRHAe = 100
 		shield:SetOwner(self)
-		shield:SetParent(self)
+		--shield:SetParent(self)
 		shield:Spawn()
 		shield:SetModelScale(0,0)
 		shield:SetModelScale(1.2, 0.1)
@@ -166,18 +142,22 @@ function ENT:ToggleShield( ent , shield,  on)
 		if Centre_Bone then
 			shield:FollowBone( self, Centre_Bone)
 		end
-
 		self._Shield = shield
-		self._EntityLookUp = nil
+		--self._EntityLookUp = nil
 	else
+		self._ShieldCoolDown = CurTime() + 0.5
 		if IsValid( self._Shield ) then
-			self._Shield:Remove()
+			self._Shield:SetModelScale(0, 0.1)
+			timer.Simple(0.1, function()
+				if not IsValid(self._Shield) or not IsValid(self) then return end
+				self._Shield:Remove()
+			end )
+			
 		end
 		self._Shield = nil
 		self._ShieldActive = false
-		self._EntityLookUp = nil
-	end --]]
-
+		--self._EntityLookUp = nil
+	end
 end
 
 function ENT:GetCrosshairFilterEnts()
