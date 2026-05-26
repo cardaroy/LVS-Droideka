@@ -125,7 +125,7 @@ function ENT:Shoot(ent)
 end
 
 function ENT:ToggleShield( ent, shield, on )
-	if on then
+	if on and CurTime() > self._ShieldCoolDown then
 		local shield = ents.Create("droideka_shield")
 		self._ShieldCoolDown = CurTime() + 2
 		self._ShieldActive = true
@@ -147,12 +147,12 @@ function ENT:ToggleShield( ent, shield, on )
 	else
 		self._ShieldCoolDown = CurTime() + 0.5
 		if IsValid( self._Shield ) then
-			self._Shield:SetModelScale(0, 0.1)
+			local shieldEnt = self._Shield
+			shieldEnt:SetModelScale(0, 0.1)
 			timer.Simple(0.1, function()
-				if not IsValid(self._Shield) or not IsValid(self) then return end
-				self._Shield:Remove()
+				if not IsValid(shieldEnt) then return end
+				shieldEnt:Remove()
 			end )
-			
 		end
 		self._Shield = nil
 		self._ShieldActive = false

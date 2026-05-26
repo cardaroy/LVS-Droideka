@@ -64,13 +64,18 @@ end
 
 function ENT:AIState_Engage( Target, Dist, Dir )
 	self._AIState = "Engage"
-	local CurWeapon = self:GetSelectedWeapon()
-	self:AISelectWeapon(2)
-	timer.Simple( 0.6, function()
-		if not IsValid( self ) then return end
+	if not self._ShieldActive and not self._ShieldActivating then
+		self._ShieldActivating = true
+		self:AISelectWeapon(2)
+		timer.Simple( 0.6, function()
+			if not IsValid( self ) then return end
+			self._ShieldActivating = false
+			self:SelectWeapon(1)
+		end )
+	elseif self._ShieldActive then
+		self._ShieldActivating = false
 		self:AISelectWeapon(1)
-	
-	end )
+	end
 
 	self:SetTargetSteer( Dir )
 	self:SetTargetSpeed( 0 )

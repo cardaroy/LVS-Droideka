@@ -160,3 +160,14 @@ function ENT:PhysicsCollide( data, physobj )
 	print("Collision captured at: " .. self._LastCapturedCollision)
 end
 
+util.AddNetworkString( "droideka_impact" )
+
+function ENT:OnTakeDamage( dmginfo )
+	local attackerPos = dmginfo:GetDamagePosition()
+	local toSelf = ( self:GetPos() - attackerPos ):GetNormalized()
+	net.Start( "droideka_impact" )
+		net.WriteVector( self:NearestPoint( attackerPos ) )
+		net.WriteVector( -toSelf )
+	net.SendPVS( self:GetPos() )
+end
+

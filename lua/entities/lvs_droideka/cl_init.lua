@@ -155,6 +155,17 @@ function ENT:LVSHudPaint( X, Y, ply )
 	self:PaintZoom( X, Y, ply )
 end
 
+net.Receive( "droideka_impact", function()
+    local pos = net.ReadVector()
+    local normal = net.ReadVector()
+    local effectdata = EffectData()
+    effectdata:SetOrigin( pos )
+    effectdata:SetNormal( normal )
+    effectdata:SetMagnitude( 2 )
+    effectdata:SetScale( 10 )
+    util.Effect( "StunstickImpact", effectdata )
+end )
+
 ENT.IconEngine = Material( "lvs/engine.png" )
 
 function ENT:LVSHudPaintInfoText( X, Y, W, H, ScrX, ScrY, ply )
