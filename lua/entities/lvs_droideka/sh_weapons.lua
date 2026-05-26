@@ -130,14 +130,14 @@ function ENT:ToggleShield( ent, shield, on )
 		self._ShieldCoolDown = CurTime() + 2
 		self._ShieldActive = true
 		local Centre_Bone = self:LookupBone("bip_spine1a")
-		shield:SetPos(ent:GetPos())
+		shield:SetPos(ent:GetPos()) --+ ent:GetRight()*10)
 		shield:SetAngles(Angle(0,0,0))
 		shield.mmRHAe = 100
 		shield:SetOwner(self)
 		--shield:SetParent(self)
 		shield:Spawn()
 		shield:SetModelScale(0,0)
-		shield:SetModelScale(1.2, 0.1)
+		shield:SetModelScale(1, 0.1)
 		shield:Activate()
 		if Centre_Bone then
 			shield:FollowBone( self, Centre_Bone)

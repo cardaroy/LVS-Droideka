@@ -9,7 +9,7 @@ function ENT:ContraptionThink()
 
 	--self:CheckUpRight()
 	self:CheckActive()
-	self:CheckMotion( OnMoveableFloor )
+	self:CheckMotion( true )
 	self:Animate()
 	--self:AimTurret()
 end
@@ -183,6 +183,9 @@ function ENT:CheckGround()
 		end
 
 		if not trace.Hit or trace.HitSky then continue end
+
+		-- Ignore ground that is too far below; prevents false grounding when placed against a wall
+		if trace.Fraction * self.HoverTraceLength > self.HoverHeight * 2.5 then continue end
 
 		NumHits = NumHits + 1
 	end

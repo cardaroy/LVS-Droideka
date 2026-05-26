@@ -35,7 +35,7 @@ function ENT:OnTakeDamage( dmginfo )
         local effectdata = EffectData()
         effectdata:SetOrigin( self:GetPos() )
         --util.Effect( "lvs_explosion_nodebris", effectdata )
-        ParticleEffectAttach("hcea_shield_disperse",PATTACH_POINT_FOLLOW,self:GetOwner(),self:GetOwner():LookupAttachment("bip_weapon_r"))
+        --ParticleEffectAttach("hcea_shield_disperse",PATTACH_POINT_FOLLOW,self:GetOwner(),self:GetOwner():LookupAttachment("bip_weapon_r"))
         self:Remove()
     end
 end

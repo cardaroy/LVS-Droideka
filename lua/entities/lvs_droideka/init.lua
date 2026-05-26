@@ -129,35 +129,24 @@ function ENT:AlignView( ply, SetZero )
 end
 
 function ENT:PhysicsCollide( data, physobj )
-	--[[
-	if not data.HitWorld then return end
-
-	-- Ignore tiny taps and rate-limit debug output.
-	if (data.Speed or 0) < 80 then return end
-	if (self._NextWorldCollisionDebug or 0) > CurTime() then return end
-
-	self._NextWorldCollisionDebug = CurTime() + 0.15
-
-	print(string.format(
-		"[lvs_droideka] Physics world collision | speed=%.1f | pos=%s",
-		data.Speed or 0,
-		tostring(data.HitPos)
-	))--]]
-	if not self._CollisionCheck then
-		-- First collision: start the 2-second countdown, don't capture yet
-		self._CollisionTimerStart = CurTime()
-		self._CollisionCheck = true
-		print("Collision countdown started")
+	-- Wall hit (normal is mostly horizontal): stop immediately to prevent wall climbing
+	if data.HitNormal.z < 0.5 then
+		self._LastCapturedCollision = CurTime()
+		self._CollisionCheck = false
 		return
 	end
 
-	-- Countdown is active so check if 2 seconds have elapsed
+	-- Floor/ramp collision: use a short delay to avoid stopping on every tiny bump
+	if not self._CollisionCheck then
+		self._CollisionTimerStart = CurTime()
+		self._CollisionCheck = true
+		return
+	end
+
 	if CurTime() < self._CollisionTimerStart + 2 then return end
 
-	-- 2 seconds are up: capture this collision's time and restart the countdown
 	self._LastCapturedCollision = CurTime()
 	self._CollisionTimerStart = CurTime()
-	print("Collision captured at: " .. self._LastCapturedCollision)
 end
 
 util.AddNetworkString( "droideka_impact" )
