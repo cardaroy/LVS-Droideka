@@ -4,8 +4,29 @@ function ENT:RunAI()
 	local Target = self:AIGetTarget( 20 )
 	local TargetPosLocal = self:WorldToLocal( IsValid( Target ) and Target:GetPos() or self:GetPos() )
 	local YawError = math.NormalizeAngle( TargetPosLocal:Angle().y )
-	local Dir = math.Clamp( YawError / 45, -1, 1 ) * 80
 
+	local RangerLength = 25000
+	local StartPos = self:LocalToWorld( self:OBBCenter() )
+	local TraceFilter = self:GetCrosshairFilterEnts()
+
+	local Front      = util.TraceLine( { start = StartPos, filter = TraceFilter, endpos = StartPos + self:GetForward() * RangerLength } )
+	local FrontLeft  = util.TraceLine( { start = StartPos, filter = TraceFilter, endpos = StartPos + self:LocalToWorldAngles( Angle(0, 15,0) ):Forward() * RangerLength } )
+	local FrontRight = util.TraceLine( { start = StartPos, filter = TraceFilter, endpos = StartPos + self:LocalToWorldAngles( Angle(0,-15,0) ):Forward() * RangerLength } )
+	local FrontLeft1  = util.TraceLine( { start = StartPos, filter = TraceFilter, endpos = StartPos + self:LocalToWorldAngles( Angle(0, 60,0) ):Forward() * RangerLength } )
+	local FrontRight1 = util.TraceLine( { start = StartPos, filter = TraceFilter, endpos = StartPos + self:LocalToWorldAngles( Angle(0,-60,0) ):Forward() * RangerLength } )
+	local FrontLeft2  = util.TraceLine( { start = StartPos, filter = TraceFilter, endpos = StartPos + self:LocalToWorldAngles( Angle(0, 85,0) ):Forward() * RangerLength } )
+	local FrontRight2 = util.TraceLine( { start = StartPos, filter = TraceFilter, endpos = StartPos + self:LocalToWorldAngles( Angle(0,-85,0) ):Forward() * RangerLength } )
+
+	local MovementTargetPos = ( Front.HitPos + FrontLeft.HitPos + FrontRight.HitPos + FrontLeft1.HitPos + FrontRight1.HitPos + FrontLeft2.HitPos + FrontRight2.HitPos ) / 7
+
+	if IsValid( Target ) then
+		MovementTargetPos = ( MovementTargetPos + Target:GetPos() ) * 0.5
+	end
+
+	self._smTargetPos = self._smTargetPos and self._smTargetPos + ( MovementTargetPos - self._smTargetPos ) * FrameTime() * 0.5 or MovementTargetPos
+
+	local MoveDirLocal = self:WorldToLocal( self._smTargetPos )
+	local Dir = math.Clamp( MoveDirLocal.y / 100, -1, 1 ) * 0.2 * math.abs( self:GetTargetSpeed() )
 	self._AIFireInput = false
 
 	if not IsValid( Target ) then

@@ -15,6 +15,7 @@ function ENT:InitWeapons()
 		-- if (self:GetDriverGunAngles() == 1) then return end
 		-- 	ent:GetDriver():PrintMessage( HUD_PRINTCENTER, "NAJPIERW WYŁĄCZ TRYB STACJONARNY ABY STRZELAĆ Z TEJ BRONI" )
 		-- return end
+		ent:EmitSound( "droideka/droideka-blaster.wav", 85, 100, 1 )
         self._FiringAnimTimer = CurTime() + 0.1
 		return self:Shoot(ent)
 
@@ -50,7 +51,7 @@ function ENT:InitWeapons()
     self._ShieldActive = false
 
     weapon.Attack = function( ent )
-		print("Triggering Shield!")
+		--print("Triggering Shield!")
 		if CurTime() > self._ShieldCoolDown and self._ShieldActive == false then
         	return self:ToggleShield( ent, shield, true)
 		elseif CurTime() > self._ShieldCoolDown and self._ShieldActive == true then
@@ -74,12 +75,15 @@ function ENT:InitWeapons()
 end
 
 function ENT:Shoot(ent)
+
+
 	local boneID = self._LeftWeapon and self:LookupBone("bip_weapon_L") or self:LookupBone("bip_weapon_r")
-	local Pos = boneID and self:GetBonePosition( boneID ) or self:GetPos()
+	local bonePos, boneAng = boneID and self:GetBonePosition( boneID ) or self:GetPos(), boneID and select( 2, self:GetBonePosition( boneID ) ) or self:GetAngles()
+	local Pos = bonePos + boneAng:Up() * 50
 
 	local _AimAngles, AimPos, _InRange = ent:GetMainAimAngles()
 	local Dir = (AimPos - Pos):GetNormalized()
-
+	
 	local bullet = {}
 	bullet.Src 	= Pos
 	bullet.Dir 	= Dir
@@ -87,8 +91,8 @@ function ENT:Shoot(ent)
 	bullet.TracerName = "lvs_tracer_red"
 	bullet.Force	= 10
 	bullet.HullSize 	= 30
-	bullet.Damage	= 100
-	bullet.SplashDamage = 100
+	bullet.Damage	= 24
+	bullet.SplashDamage = 24
 	bullet.SplashDamageRadius = 10
 	bullet.Velocity = 16000
 	bullet.Attacker 	= ent:GetDriver()

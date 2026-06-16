@@ -152,6 +152,12 @@ end
 util.AddNetworkString( "droideka_impact" )
 
 function ENT:OnTakeDamage( dmginfo )
+	self:CalcShieldDamage( dmginfo )
+	self:CalcDamage( dmginfo )
+	self:TakePhysicsDamage( dmginfo )
+	self:OnAITakeDamage( dmginfo )
+	self:RemoveAllDecals()
+	
 	local attackerPos = dmginfo:GetDamagePosition()
 	local toSelf = ( self:GetPos() - attackerPos ):GetNormalized()
 	net.Start( "droideka_impact" )

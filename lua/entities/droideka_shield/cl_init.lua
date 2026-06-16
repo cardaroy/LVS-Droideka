@@ -1,4 +1,9 @@
 include("shared.lua")
+--[[
+function ENT:Initialize()
+    self:SetSolid(SOLID_NONE)
+end
+--]]
 
 net.Receive( "droideka_shield_impact", function()
     local pos = net.ReadVector()
@@ -8,7 +13,7 @@ net.Receive( "droideka_shield_impact", function()
     effectdata:SetNormal( normal )
     effectdata:SetMagnitude( 2 )
     effectdata:SetScale( 10 )
-    util.Effect( "ElectricSpark", effectdata )
+	ParticleEffect("hcea_t25r_core_2", dmginfo:GetDamagePosition(), dmginfo:GetDamageForce():Angle(), self)
 end )
 
 function ENT:Draw()
